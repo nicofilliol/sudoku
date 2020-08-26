@@ -1,11 +1,10 @@
 from board import Board
 import time
 
-SLEEP = 0.1
-
 class Solver:
-    def __init__(self, sudoku:Board):
+    def __init__(self, sudoku:Board, animation_speed=0.0):
         self.sudoku = sudoku
+        self.sleep_time = animation_speed
 
     def solve(self):
         # Use backtracking algorithm and recursion to solve
@@ -26,7 +25,7 @@ class Solver:
         # try all possibilities while not solution found
         for n in range(1,10): # numbers 1-9
             self.sudoku.board[row][col] = n
-            time.sleep(SLEEP)
+            time.sleep(self.sleep_time)
             
             if self.is_valid(index, n):
                 # Get next cell and do recursive call
@@ -37,7 +36,7 @@ class Solver:
         # no option works -> backpropagate
         else:
             self.sudoku.board[row][col] = 0 # reset
-            time.sleep(SLEEP)
+            time.sleep(self.sleep_time)
             return False 
             
 

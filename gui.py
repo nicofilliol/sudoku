@@ -67,10 +67,6 @@ class Field:
         else:
             pass # empty
 
-
-        #pygame.draw.rect(win, (255,0,0), (x, y, width, height), 3)
-
-
     def __repr__(self):
         return f"Field({self.value})"
 
@@ -89,13 +85,10 @@ def main_gui(board:Board):
     pygame.display.update()
     
     # Start solver in seperate thread
-    print("before new thread")
-
-    solver = Solver(sudoku.board)
+    solver = Solver(sudoku.board, animation_speed=0.05)
     thread = threading.Thread(target = solver.solve)
     thread.setDaemon(True)
     thread.start()
-    print("started solver")
 
     # Update GUI in main thread
     run = True
