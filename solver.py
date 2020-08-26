@@ -9,7 +9,7 @@ class Solver:
     def solve(self):
         # Use backtracking algorithm and recursion to solve
         # Get first empty field and solver from there
-        first_empty = self.next_empty((0,0))
+        first_empty = self.next_empty((0, -1))
         found_solution = self.solve_from(first_empty)
         
 
