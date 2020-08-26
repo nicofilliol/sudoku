@@ -1,13 +1,16 @@
 from board import Board
-from solver import Solver
+from gui import main_gui
+import pygame
 
 def main():
     board = Board('board1.txt')
-    board.print()
 
-    solver = Solver(board)
-    solver.solve()
-    board.print()
+    main_gui(board)
+    pygame.quit()
+
+    # solver = Solver(board)
+    # solver.solve()
+    # board.print()
 
 
 

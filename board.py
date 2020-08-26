@@ -34,5 +34,8 @@ class Board:
             else:
                 print()
 
+    def copy(self):
+        return Board([row[:] for row in self.board])
+
 
 

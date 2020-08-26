@@ -1,4 +1,7 @@
 from board import Board
+import time
+
+SLEEP = 0.1
 
 class Solver:
     def __init__(self, sudoku:Board):
@@ -22,9 +25,10 @@ class Solver:
 
         # try all possibilities while not solution found
         for n in range(1,10): # numbers 1-9
+            self.sudoku.board[row][col] = n
+            time.sleep(SLEEP)
+            
             if self.is_valid(index, n):
-                self.sudoku.board[row][col] = n
-
                 # Get next cell and do recursive call
                 next = self.next_empty((row, col))
                 if self.solve_from(next):
@@ -33,6 +37,7 @@ class Solver:
         # no option works -> backpropagate
         else:
             self.sudoku.board[row][col] = 0 # reset
+            time.sleep(SLEEP)
             return False 
             
 
@@ -71,19 +76,19 @@ class Solver:
 
         # check row
         for c in range(self.sudoku.n_cols):
-            if self.sudoku.board[row][c] == number:
+            if self.sudoku.board[row][c] == number and (row, c) != index:
                 return False
 
         # check column
         for r in range(self.sudoku.n_rows):
-            if self.sudoku.board[r][col] == number:
+            if self.sudoku.board[r][col] == number and (r, col) != index:
                 return False
 
         # check box
         box = self.get_box((row, col))
         for r in range(box[0] * 3, box[0] * 3 + 3):
             for c in range(box[1] * 3, box[1] * 3 + 3):
-                if self.sudoku.board[r][c] == number:
+                if self.sudoku.board[r][c] == number and (r, c) != index:
                     return False
 
         return True
