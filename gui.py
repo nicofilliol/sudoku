@@ -99,3 +99,6 @@ def main_gui(board:Board):
 
         redraw_window(win, sudoku)
         pygame.display.update()
+    
+    pygame.quit()
+
