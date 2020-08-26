@@ -7,9 +7,8 @@ def main():
 
     solver = Solver(board)
     solver.solve()
+    board.print()
 
-    print(solver.is_valid((0, 1), 6))
-    print(solver.is_valid((0, 1), 7))
 
 
 
