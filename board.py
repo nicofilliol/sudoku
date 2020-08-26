@@ -6,6 +6,10 @@ class Board:
         else:
             self.board = board
 
+        # set dimensions
+        self.n_rows = len(self.board)
+        self.n_cols = len(self.board[0])
+
     def load_from_file(self, board:str) -> list:
         b = []
         with open(board) as reader:
@@ -19,22 +23,16 @@ class Board:
 
     def print(self):
         print()
-        for r in range(len(self.board)):
-            for c in range(len(self.board[0])):
+        for r in range(self.n_rows):
+            for c in range(self.n_cols):
                 print(self.board[r][c], end=' ')
-                if (c+1) % 3 == 0 and c != len(self.board[0])-1:
+                if (c+1) % 3 == 0 and c != self.n_cols-1:
                     print('|', end=' ')
             
-            if (r+1) % 3 == 0 and r != len(self.board)-1:
+            if (r+1) % 3 == 0 and r != self.n_rows-1:
                 print("\n---------------------") # new row
             else:
                 print()
-
-
-
-board = Board('board1.txt')
-board.print()
-
 
 
 
