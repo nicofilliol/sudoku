@@ -15,7 +15,7 @@ def extract_digit(cell:np.array, debug=False):
     img_thresh = clear_border(img_thresh)
     
     if debug:
-        cv2.imshow("Cell Thresh", img_thresh)
+        cv2.imshow("Extracted Cell", img_thresh)
         cv2.waitKey(0)
 
     # Find contours in thresholded cell -> contour of number
@@ -134,7 +134,6 @@ def cells_to_board(cells:list) -> list:
 
 def get_image_from_webcam():
     cap = cv2.VideoCapture(0)
-    print("aborted here")
     while(True):
         # Capture frame-by-frame
         _, frame = cap.read()
