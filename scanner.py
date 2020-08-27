@@ -2,10 +2,14 @@ import cv2 # OpenCV 4.4.0
 import numpy as np
 from imutils import perspective
 from skimage.segmentation import clear_border
+from network import SudokuCNN
 
-def extract_digit(cell, debug=False):
-	# Apply automatic thresholding to cell and then clear any
-	# connected borders that touch border of cell
+# Inspiration for computer vision/digit extraction from tutorial on
+# https://www.pyimagesearch.com/2020/08/10/opencv-sudoku-solver-and-ocr/
+
+def extract_digit(cell:np.array, debug=False):
+    # Apply automatic thresholding to cell and then clear any
+    # connected borders that touch border of cell
     img_thresh = cv2.threshold(cell, 0, 255, cv2.THRESH_BINARY_INV | cv2.THRESH_OTSU)[1]
     img_thresh = clear_border(img_thresh)
     
@@ -16,7 +20,7 @@ def extract_digit(cell, debug=False):
     # Find contours in thresholded cell -> contour of number
     contours, _ = cv2.findContours(img_thresh.copy(), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
 
-	# If no contours were found -> empty cell
+    # If no contours were found -> empty cell
     if len(contours) == 0:
         return None
 	
@@ -40,7 +44,7 @@ def extract_digit(cell, debug=False):
         cv2.imshow("Digit", img_digit)
         cv2.waitKey(0)
 
-	# Return the digit to the calling function
+    # Return the digit to the calling function
     return img_digit
 
 
@@ -96,7 +100,7 @@ def find_sudoku(image:str, debug=False):
     # Return a tuple of Sudoku in both RGB and grayscale
     return (img_sudoku, img_gray)
 
-def show_cells(cells):
+def show_cells(cells:list):
     n_cells = 0
     for r in range(9):
         for c in range(9):
@@ -106,10 +110,28 @@ def show_cells(cells):
                 cv2.waitKey(0)
     print(n_cells)
 
-def cells_to_int(cells:list):
-    # use neural network to predict digit
-    # create 2d array containing given numbers and 0 for empty fields
-    pass   
+def cells_to_board(cells:list) -> list:
+    # Use neural network to predict digit
+    # Create 2d array containing given numbers and 0 for empty fields
+    
+    # Load CNN model
+    cnn = SudokuCNN("CNN/sudoku_cnn")
+
+    sudoku = []
+    for r in range(9):
+        row = []
+        for c in range(9):
+            # Get image of digit
+            digit = cells[r][c]
+
+            if digit is None:
+                row.append(0)
+            else:
+                row.append(cnn.predict(digit))
+        sudoku.append(row)
+
+    return sudoku
+   
 
 def convert_image_to_board(image:str):
     # Find Sudoku in image
@@ -135,8 +157,5 @@ def convert_image_to_board(image:str):
             row.append(digit)
         cells.append(row) 
 
-    #show_cells(cells)   
-
-convert_image_to_board("resources/sudoku_hard.jpg")
-#convert_image_to_board("resources/sudoku.png")
+    return cells_to_board(cells)
 

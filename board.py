@@ -1,8 +1,13 @@
+import scanner
+
 class Board:
     def __init__(self, board):
 
         if type(board) == str: #load board from file
-            self.board = self.load_from_file(board)
+            if board.lower().endswith(('.png', '.jpg', '.jpeg', '.tiff', '.bmp')): # image
+                self.board = scanner.convert_image_to_board(board)
+            else: # text file
+                self.board = self.load_from_file(board)
         else:
             self.board = board
 
