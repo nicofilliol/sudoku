@@ -6,7 +6,8 @@ The script is able to solve a given Sudoku and/or visualize the process of solvi
 from board import Board
 
 board = Board("sudokus/board1.txt") # Load board from textfile
-board = Board('resources/sudoku_hard.jpg') # Load board from image
+board = Board("resources/sudoku_hard.jpg") # Load board from image
+board = Board("webcam") # Scan board using webcam (click 's' to take photo and 'q to quit)
 board = Board([
    [4, 0, 5, 1, 0, 0, 6, 0, 0],
    ...
