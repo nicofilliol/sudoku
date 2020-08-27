@@ -5,7 +5,8 @@ The script is able to solve a given Sudoku and/or visualize the process of solvi
 ```python
 from board import Board
 
-board = Board("board1.txt") # Load board from textfile
+board = Board("sudokus/board1.txt") # Load board from textfile
+board = Board('resources/sudoku_hard.jpg') # Load board from image
 board = Board([
    [4, 0, 5, 1, 0, 0, 6, 0, 0],
    ...
