@@ -3,6 +3,7 @@ import numpy as np
 from imutils import perspective
 from skimage.segmentation import clear_border
 from network import SudokuCNN
+import sys
 
 # Inspiration for computer vision/digit extraction from tutorial on
 # https://www.pyimagesearch.com/2020/08/10/opencv-sudoku-solver-and-ocr/
@@ -48,10 +49,8 @@ def extract_digit(cell:np.array, debug=False):
     return img_digit
 
 
-def find_sudoku(image:str, debug=False):
+def find_sudoku(img:np.array, debug=False):
     # Convert image to grayscale and add blur
-    img = cv2.imread(image)
-    
     img_gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
     img_blurred = cv2.GaussianBlur(img_gray, (7, 7), 3)
 
@@ -98,7 +97,7 @@ def find_sudoku(image:str, debug=False):
 	    cv2.waitKey(0)
 	
     # Return a tuple of Sudoku in both RGB and grayscale
-    return (img_sudoku, img_gray)
+    return (img_sudoku, img_gray, sudoku_contour)
 
 def show_cells(cells:list):
     n_cells = 0
@@ -131,11 +130,44 @@ def cells_to_board(cells:list) -> list:
         sudoku.append(row)
 
     return sudoku
-   
 
-def convert_image_to_board(image:str):
+
+def get_image_from_webcam():
+    cap = cv2.VideoCapture(0)
+    print("aborted here")
+    while(True):
+        # Capture frame-by-frame
+        _, frame = cap.read()
+        frame_resized = cv2.resize(frame, (int(frame.shape[1] * 0.75), int(frame.shape[0] * 0.75))) 
+
+        # Our operations on the frame come here
+        (_, _, contour) = find_sudoku(frame_resized, False)
+
+        # Draw contour
+        img = frame_resized.copy()
+        cv2.drawContours(img, [contour], -1, (0, 255, 0), 2)
+
+        # Display the resulting frame
+        cv2.imshow('Sudoku', img)
+        if cv2.waitKey(1) & 0xFF == ord('q'):
+            sys.exit()
+        elif cv2.waitKey(1) & 0xFF == ord('s'):
+            break
+
+    # When everything done, release the capture
+    cap.release()
+    cv2.destroyAllWindows()
+    return frame
+
+def convert_image_to_board(image:str, debug=False):
+    # Get image from file or webcam
+    if image == "webcam":
+        img = get_image_from_webcam()
+    else: 
+        img = cv2.imread(image)
+
     # Find Sudoku in image
-    (sudoku, sudoku_gray) = find_sudoku(image, False)
+    (sudoku, sudoku_gray, _) = find_sudoku(img, debug)
 
     # Estimate cell width and height
     cell_width = sudoku.shape[1] // 9
@@ -153,7 +185,7 @@ def convert_image_to_board(image:str):
 
             # Crop cell
             cell = sudoku_gray[y_start:y_end, x_start:x_end]
-            digit = extract_digit(cell, False)
+            digit = extract_digit(cell, debug)
             row.append(digit)
         cells.append(row) 
 

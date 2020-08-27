@@ -4,8 +4,8 @@ class Board:
     def __init__(self, board):
 
         if type(board) == str: #load board from file
-            if board.lower().endswith(('.png', '.jpg', '.jpeg', '.tiff', '.bmp')): # image
-                self.board = scanner.convert_image_to_board(board)
+            if board.lower().endswith(('.png', '.jpg', '.jpeg', '.tiff', '.bmp')) or board == "webcam": # image
+                self.board = scanner.convert_image_to_board(board, True)
             else: # text file
                 self.board = self.load_from_file(board)
         else:
