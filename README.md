@@ -33,3 +33,4 @@ main_gui(board) # start visualizing process
 ```
 
 ![Example](resources/example.gif)
+![Webcam Demo](resources/webcam_demo.gif)
